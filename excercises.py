@@ -65,6 +65,13 @@ def excercise2():
   # print_perceptron_test(perceptron, x, y)
   print("Resulting weights: " + str(perceptron.weights))
 
+def excercise3():
+  x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
+  y = [1, 1, -1, -1]
+
+  x = np.array(x)
+  y = np.array(y)
+
 def print_perceptron_test(perceptron, inputs, expected_outputs):
   print("Perceptron tests (all should be true):")
   for curr_input, curr_expected_output in zip(inputs, expected_outputs):
