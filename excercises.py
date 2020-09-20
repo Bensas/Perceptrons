@@ -1,9 +1,29 @@
+import csv
 import numpy as np
 from simple_perceptron import SimplePerceptron
 
 def excercise1():
   x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
   y = [-1, -1, -1, 1]
+
+  # y_values = []
+  # f = open('ej2_Y.txt', 'r')
+  # reader = csv.reader(f, delimiter=' ', lineterminator='\n')
+  # for row in reader:
+  #     for each in row:
+  #         if (each != ''):
+  #             y_values.append(each)
+  # f.close()
+  # x_values = []
+  # f = open('ej2_X.txt', 'r')
+  # reader = csv.reader(f, delimiter=' ', lineterminator='\n')
+  # for row in reader:
+  #     x = []
+  #     for each in row:
+  #         if(each != ''):
+  #             x.append(each)
+  #     x_values.append(x)
+  # f.close()
 
   x = np.array(x)
   y = np.array(y)
