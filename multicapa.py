@@ -25,3 +25,30 @@ class MulticapaPerceptron(object):
                 self.bias += self.learning_rate * (label - prediction)
                 # print(self.weights);
                 # error = calculate_error(inputs, prediction, self.weights)
+    def propagation():
+
+    def backPropagation():
+
+    def tanh(x):
+        return np.tanh(x)
+
+    # Funcion para obtener la derivada de tanh x
+    def dtanh(x):
+        return 1.0 - np.tanh(x)**2
+
+    # Funcion sigmoide de x
+    def sigmoide(x):
+        return 1/(1+np.exp(-x))
+
+    # Funcion para obtener la derivada de de la funcion sigmoide
+    def dsigmoide(x):
+        s = 1/(1+np.exp(-x))
+        return s * (1-s)
+
+    def Datos_entrenamiento(matriz,x1,xn):
+        xin = matriz[:,x1:xn+1]
+        return xin
+
+    def Datos_validacion(matriz,xji,xjn):
+        xjn = matriz[:,xji:xjn+1]
+        return xjn

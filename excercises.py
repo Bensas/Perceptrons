@@ -2,7 +2,7 @@ import csv
 import numpy as np
 from simple_perceptron import SimplePerceptron
 from non_linear_perceptron import NonLinearPerceptron
-from multicapa import MultiCapaPerceptron
+from multicapa import MulticapaPerceptron
 
 def excercise1():
   x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
@@ -70,20 +70,56 @@ def excercise2():
   # print_perceptron_test(perceptron, x, y)
   print("Resulting weights: " + str(perceptron.weights))
 
+def Datos_entrenamiento(matriz,x1,xn):
+    xin = matriz[:,x1:xn+1]
+    return xin
+
+def Datos_validacion(matriz,xji,xjn):
+    xjn = matriz[:,xji:xjn+1]
+    return xjn
+
 def excercise3():
-  x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
-  y = [1, 1, -1, -1]
+  x = [[-1, 1, 1], [1, -1, 1], [-1, -1, -1], [1, 1, -1]]
 
-  x = np.array(x)
-  y = np.array(y)
-
-  print("X=" + str(x))
-  print("Y=" + str(y))
-  print("Training...")
-  perceptron = MultiCapaPerceptron(2)
-  perceptron.train(x, y)
-  # print_perceptron_test(perceptron, x, y)
-  print("Resulting weights: " + str(perceptron.weights))
+  matrix_data = np.array(x)
+  # Datos de entrada
+  x_inicio = 0
+  x_n = 1
+  # Datos de entrada validacion
+  xj_inicio = 3
+  xj_n = 4
+  # Crear vector de entradas xi
+  xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
+  d = matrix_data[:,x_n+1]
+  # vector de validación
+  xj = (Datos_validacion(matrix_data,xj_inicio,xj_n))
+  # Parametros de la red
+  f,c = xi.shape
+  fac_ap = 0.2
+  precision = 0.00000001
+  epocas = 10000 #
+  epochs = 0
+  # Arquitectura de la red
+  n_entradas = c # numero de entradas
+  cap_ocultas = 1 # Una capa oculta
+  n_ocultas = 6 # Neuronas en la capa oculta
+  n_salida = 1 # Neuronas en la capa de salida
+  # Valor de umbral o bia
+  us = 1.0 # umbral en neurona de salida
+  uoc = np.ones((n_ocultas,1),float) # umbral en las neuronas ocultas
+  # Matriz de pesos sinapticos
+  random.seed(0) # 
+  w_1 = random.rand(n_ocultas,n_entradas)
+  w_2 = random.rand(n_salida,n_ocultas)
+    
+  #Inicializar la red PMC
+  red = MulticapaPerpeptron(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje()
+  
+  # validacion
+  red = MulticapaPerceptron(xj,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  salidas = red.Operacion()
+  print("Salidas: ",salidas)
 
 def print_perceptron_test(perceptron, inputs, expected_outputs):
   print("Perceptron tests (all should be true):")
