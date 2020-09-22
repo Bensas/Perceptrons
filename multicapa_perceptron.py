@@ -49,6 +49,7 @@ class MLP():
         Errores = [] # Almacenar los errores de la red en un ciclo
         while(np.abs(self.error_red) > self.precision):
             self.Error_prev = self.Ew
+            print(self.error_red)
             for i in range(len(d)):
                 self.Entradas = self.xi[:,i] # Senales de entrada por iteracion
                 self.di = self.d[i]
@@ -132,20 +133,14 @@ def Datos_validacion(matriz,xji,xjn):
 
 # Propagama principal
 if "__main__"==__name__:
-    xls = pd.ExcelFile('XOR.xlsx') # leer archivo excel
-    datos = xls.parse('Hoja1') # Hoja de trabajo
-    matrix_data = np.array(datos)
+    x = [[-1, 1, 1], [1, -1, 1], [-1, -1, -1], [1, 1, -1]]
+    matrix_data = np.array(x)
     # Datos de entrada
     x_inicio = 0
     x_n = 1
-    # Datos de entrada validacion
-    xj_inicio = 3
-    xj_n = 4
     # Crear vector de entradas xi
     xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
     d = matrix_data[:,x_n+1]
-    # vector de validación
-    xj = (Datos_validacion(matrix_data,xj_inicio,xj_n))
     # Parametros de la red
     f,c = xi.shape
     fac_ap = 0.2
@@ -166,20 +161,12 @@ if "__main__"==__name__:
     w_2 = random.rand(n_salida,n_ocultas)
     
     #Inicializar la red PMC
+    print(w_1)
+    print(w_2)
+    print("despues ... \n")
     red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
     epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje()
-    
-    # graficar el error
-    plt.grid()
-    plt.ylabel("Error de la red",fontsize=12)
-    plt.xlabel("Épocas",fontsize=12)
-    plt.title("Perceptrón Multicapa",fontsize=14)
-    x = np.arange(epochs)
-    plt.plot(x,E,'b',label="Error global")
-    plt.legend(loc='upper right')
-    plt.show
-    
-    # validacion
-    red = MLP(xj,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
-    salidas = red.Operacion()
-    print("Salidas: ",salidas)
+    print(red.w1)
+    print(red.w2)
+    print("error final: ")
+    print(red.error_red)
