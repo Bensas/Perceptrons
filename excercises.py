@@ -58,10 +58,14 @@ def excercise2():
   # print("=== OR FUNCTION ===")
   print("X=" + str(x))
   print("Y=" + str(y))
+  # x = normalize_arr(x)
+  y = normalize_arr(y)
+  print("Normalized X=" + str(x))
+  print("Normalized Y=" + str(y))
   print("Training...")
   perceptron = NonLinearPerceptron(3)
   perceptron.train(x, y)
-  print(perceptron.cost_function(x, y))
+  # print(perceptron.cost_function(x, y))
   # print_perceptron_test(perceptron, x, y)
   print("Resulting weights: " + str(perceptron.weights))
 
@@ -77,6 +81,10 @@ def print_perceptron_test(perceptron, inputs, expected_outputs):
   for curr_input, curr_expected_output in zip(inputs, expected_outputs):
     print(perceptron.predict(curr_input) == curr_expected_output)
 
+def normalize_arr(arr):
+  min = np.min(arr)
+  max = np.max(arr)    
+  return (arr - min) / (max - min) 
 
 excercise2()
 
