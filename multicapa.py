@@ -49,7 +49,7 @@ class MLP():
         Errores = [] # Almacenar los errores de la red en un ciclo
         while(np.abs(self.error_red) > self.precision):
             self.Error_prev = self.Ew
-            for i in range(len(d)):
+            for i in range(len(self.d)):
                 self.Entradas = self.xi[:,i] # Senales de entrada por iteracion
                 self.di = self.d[i]
                 self.Propagar()
@@ -102,7 +102,7 @@ class MLP():
         
     def Error(self):
         # Error cuadratico medio
-        self.Ew = ((1/len(d)) * (sum(self.Error_actual)))
+        self.Ew = ((1/len(self.d)) * (sum(self.Error_actual)))
         self.error_red = (self.Ew - self.Error_prev)
 
 # Funcion para obtener la tanh
@@ -121,11 +121,3 @@ def sigmoide(x):
 def dsigmoide(x):
     s = 1/(1+np.exp(-x))
     return s * (1-s)
-
-def Datos_entrenamiento(matriz,x1,xn):
-    xin = matriz[:,x1:xn+1]
-    return xin
-
-def Datos_validacion(matriz,xji,xjn):
-    xjn = matriz[:,xji:xjn+1]
-    return xjn

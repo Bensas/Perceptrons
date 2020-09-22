@@ -50,7 +50,7 @@ class MLP():
         while(np.abs(self.error_red) > self.precision):
             self.Error_prev = self.Ew
             print(self.error_red)
-            for i in range(len(d)):
+            for i in range(len(self.d)):
                 self.Entradas = self.xi[:,i] # Senales de entrada por iteracion
                 self.di = self.d[i]
                 self.Propagar()
@@ -103,7 +103,7 @@ class MLP():
         
     def Error(self):
         # Error cuadratico medio
-        self.Ew = ((1/len(d)) * (sum(self.Error_actual)))
+        self.Ew = ((1/len(self.d)) * (sum(self.Error_actual)))
         self.error_red = (self.Ew - self.Error_prev)
 
 # Funcion para obtener la tanh
@@ -166,7 +166,7 @@ if "__main__"==__name__:
     print("despues ... \n")
     red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
     epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje()
-    print(red.w1)
-    print(red.w2)
+    print(w1_a)
+    print(w2_a)
     print("error final: ")
     print(red.error_red)

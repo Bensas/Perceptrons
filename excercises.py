@@ -1,13 +1,14 @@
 import csv
 import numpy as np
+from numpy import random
 from simple_perceptron import SimplePerceptron
 from non_linear_perceptron import NonLinearPerceptron
-from multicapa import MulticapaPerceptron
+from multicapa import MLP
 
 def excercise1():
   x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
   y = [-1, -1, -1, 1]
-
+  
   x = np.array(x)
   y = np.array(y)
 
@@ -74,10 +75,6 @@ def Datos_entrenamiento(matriz,x1,xn):
     xin = matriz[:,x1:xn+1]
     return xin
 
-def Datos_validacion(matriz,xji,xjn):
-    xjn = matriz[:,xji:xjn+1]
-    return xjn
-
 def excercise3():
   x = [[-1, 1, 1], [1, -1, 1], [-1, -1, -1], [1, 1, -1]]
 
@@ -85,14 +82,9 @@ def excercise3():
   # Datos de entrada
   x_inicio = 0
   x_n = 1
-  # Datos de entrada validacion
-  xj_inicio = 3
-  xj_n = 4
   # Crear vector de entradas xi
   xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
   d = matrix_data[:,x_n+1]
-  # vector de validación
-  xj = (Datos_validacion(matrix_data,xj_inicio,xj_n))
   # Parametros de la red
   f,c = xi.shape
   fac_ap = 0.2
@@ -113,13 +105,15 @@ def excercise3():
   w_2 = random.rand(n_salida,n_ocultas)
     
   #Inicializar la red PMC
-  red = MulticapaPerpeptron(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  print(w_1)
+  print(w_2)
+  print("despues ... \n")
+  red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
   epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje()
-  
-  # validacion
-  red = MulticapaPerceptron(xj,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
-  salidas = red.Operacion()
-  print("Salidas: ",salidas)
+  print(w1_a)
+  print(w2_a)
+  print("error final: ")
+  print(red.error_red)
 
 def print_perceptron_test(perceptron, inputs, expected_outputs):
   print("Perceptron tests (all should be true):")
@@ -131,6 +125,6 @@ def normalize_arr(arr):
   max = np.max(arr)    
   return (arr - min) / (max - min) 
 
-excercise2()
+excercise3()
 
 # 4.47, -4.08, 4.45 -> 87
