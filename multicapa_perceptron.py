@@ -160,6 +160,16 @@ if "__main__"==__name__:
     w_1 = random.rand(n_ocultas,n_entradas)
     w_2 = random.rand(n_salida,n_ocultas)
     
+    # graficar el error
+    plt.grid()
+    plt.ylabel("Error de la red",fontsize=12)
+    plt.xlabel("Épocas",fontsize=12)
+    plt.title("Perceptrón Multicapa",fontsize=14)
+    x = np.arange(epochs)
+    plt.plot(x,E,'b',label="Error global")
+    plt.legend(loc='upper right')
+    plt.show
+    
     #Inicializar la red PMC
     print(w_1)
     print(w_2)
