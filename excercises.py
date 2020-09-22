@@ -2,6 +2,7 @@ import csv
 import numpy as np
 from simple_perceptron import SimplePerceptron
 from non_linear_perceptron import NonLinearPerceptron
+from multicapa import MultiCapaPerceptron
 
 def excercise1():
   x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
@@ -75,6 +76,14 @@ def excercise3():
 
   x = np.array(x)
   y = np.array(y)
+
+  print("X=" + str(x))
+  print("Y=" + str(y))
+  print("Training...")
+  perceptron = MultiCapaPerceptron(2)
+  perceptron.train(x, y)
+  # print_perceptron_test(perceptron, x, y)
+  print("Resulting weights: " + str(perceptron.weights))
 
 def print_perceptron_test(perceptron, inputs, expected_outputs):
   print("Perceptron tests (all should be true):")
