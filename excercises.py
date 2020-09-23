@@ -108,6 +108,23 @@ def Datos_entrenamiento(matriz,x1,xn):
     xin = matriz[:,x1:xn+1]
     return xin
 
+# Funcion para obtener la tanh
+def tanh(x):
+    return np.tanh(x)
+
+# Funcion para obtener la derivada de tanh x
+def dtanh(x):
+    return 1.0 - np.tanh(x)**2
+
+# Funcion sigmoide de x
+def sigmoide(x):
+    return 1/(1+np.exp(-x))
+
+# Funcion para obtener la derivada de de la funcion sigmoide
+def dsigmoide(x):
+    s = 1/(1+np.exp(-x))
+    return s * (1-s)
+
 def excercise3():
 
   # Ejercicio 3.1
@@ -158,12 +175,14 @@ def excercise3():
   random.seed(0) # 
   w_1 = random.rand(n_ocultas,n_entradas)
   w_2 = random.rand(n_salida,n_ocultas)
-    
+  # Funcion de activacion y su derivada
+  funcion = sigmoide
+  derivada_funcion = dsigmoide
   #Inicializar la red PMC
   print(w_1)
   print(w_2)
   print("despues ... \n")
-  red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida, funcion, derivada_funcion)
   epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje(False)
   print(w1_a)
   print(w2_a)
@@ -193,7 +212,7 @@ def excercise3():
   d = matrix_data[:,x_n+1]
   xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
   epocas = 0
-  red2 = MLP(xi,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  red2 = MLP(xi,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida, funcion, derivada_funcion)
   red2.Aprendizaje(True)
 
 def print_perceptron_test(perceptron, inputs, expected_outputs):
@@ -211,20 +230,3 @@ def normalize_arr(arr):
 excercise3()
 
 # 4.47, -4.08, 4.45 -> 87
-
-# Funcion para obtener la tanh
-def tanh(x):
-    return np.tanh(x)
-
-# Funcion para obtener la derivada de tanh x
-def dtanh(x):
-    return 1.0 - np.tanh(x)**2
-
-# Funcion sigmoide de x
-def sigmoide(x):
-    return 1/(1+np.exp(-x))
-
-# Funcion para obtener la derivada de de la funcion sigmoide
-def dsigmoide(x):
-    s = 1/(1+np.exp(-x))
-    return s * (1-s)
