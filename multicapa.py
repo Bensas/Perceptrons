@@ -4,42 +4,42 @@ import matplotlib.pyplot as plt
 
 class MLP():
     # constructor
-    def __init__(self,xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida):
+    def __init__(self,all_inputs,labels,w_1,w_2,bias,uoc,precision,epocas,learning_rate,n_ocultas,n_entradas,n_salida):
         # Variables de inicialización 
-        self.xi = np.transpose(xi)
-        self.d = d
+        self.all_inputs = np.transpose(all_inputs)
+        self.labels = labels
         self.w1 = w_1
         self.w2 = w_2
-        self.us = us
+        self.bias = bias
         self.uoc = uoc
         self.precision = precision
         self.epocas = epocas
-        self.fac_ap = fac_ap
+        self.learning_rate = learning_rate
         self.n_entradas = n_entradas
         self.n_ocultas = n_ocultas
         self.n_salida = n_salida
         # Variables de aprendizaje
-        self.di = 0 # Salida deseada en iteracion actual
+        self.current_label = 0 # Salida deseada en iteracion actual
         self.error_red = 1 # Error total de la red en una conjunto de iteraciones
         self.Ew = 0 # Error cuadratico medio
-        self.Error_prev = 0 # Error anterior
+        self.prev_error = 0 # Error anterior
         self.Errores = []
-        self.Error_actual = np.zeros((len(d))) # Errores acumulados en un ciclo de muestras
-        self.Entradas = np.zeros((1,n_entradas))
-        self.un = np.zeros((n_ocultas,1)) # Potencial de activacion en neuronas ocultas
-        self.gu = np.zeros((n_ocultas,1)) # Funcion de activacion de neuronas ocultas
-        self.Y = 0.0 # Potencial de activacion en neurona de salida
-        self.y = 0.0 # Funcion de activacion en neurona de salida
-        self.epochs = 0
+        self.Error_actual = np.zeros(len(labels)) # Errores acumulados en un ciclo de muestras
+        self.current_inputs = np.zeros((1,n_entradas))
+        self.hidden_layer_inputs = np.zeros((n_ocultas,1)) # Entradas en neuronas ocultas
+        self.hidden_layer_outputs = np.zeros((n_ocultas,1)) # Resultado de la activacion en neuronas ocultas
+        self.output_layer_input = 0.0 # Entrada en la neurona de salida
+        self.y = 0.0 # Resultado de la activación en la neurona de salida
+        self.current_epochs = 0
         # Variables de retropropagacion
         self.error_real = 0
-        self.ds = 0.0 # delta de salida
-        self.docu = np.zeros((n_ocultas,1)) # Deltas en neuronas ocultas
+        self.output_delta = 0.0 # delta de salida
+        self.hidden_output_delta = np.zeros((n_ocultas,1)) # Deltas en neuronas ocultas
         
     def Operacion(self):
-        respuesta = np.zeros((len(self.d),1))
-        for p in range(len(self.d)):
-            self.Entradas = self.xi[:,p]
+        respuesta = np.zeros((len(self.labels),1))
+        for p in range(len(self.labels)):
+            self.current_inputs = self.all_inputs[:,p]
             self.Propagar()
             respuesta[p,:] = self.y
         return respuesta.tolist()
@@ -47,31 +47,31 @@ class MLP():
     def Aprendizaje(self):
         Errores = [] # Almacenar los errores de la red en un ciclo
         while(np.abs(self.error_red) > self.precision):
-            self.Error_prev = self.Ew
-            for i in range(len(self.d)):
-                self.Entradas = self.xi[:,i] # Senales de entrada por iteracion
-                self.di = self.d[i]
+            self.prev_error = self.Ew
+            for i in range(len(self.labels)):
+                self.current_inputs = self.all_inputs[:,i] # Senales de entrada por iteracion
+                self.current_label = self.labels[i]
                 self.Propagar()
                 self.Backpropagation()
                 self.Propagar()
                 print("esperado: ")
-                print(self.di)
+                print(self.current_label)
                 print("resultado: ")
                 print(self.y)
                 print("\n")
-                self.Error_actual[i] = (0.5)*((self.di - self.y)**2)
+                self.Error_actual[i] = (0.5)*((self.current_label - self.y)**2)
             # error global de la red
             self.Error()
             Errores.append(self.error_red)
-            self.epochs +=1
+            self.current_epochs +=1
             # Si se alcanza un mayor numero de epocas
-            if self.epochs > self.epocas:
+            if self.current_epochs > self.epocas:
                 break
         # Regresar 
-        return self.epochs,self.w1,self.w2,self.us,self.uoc,Errores
+        return self.current_epochs,self.w1,self.w2,self.bias,self.uoc,Errores
     
     # def Test(self):    
-    #     self.Entradas = self.xi[:,34] # Senales de entrada por iteracion
+    #     self.current_inputs = self.all_inputs[:,34] # Senales de entrada por iteracion
     #     self.Propagar()
     #     self.Backpropagation()
     #     self.Propagar()
@@ -82,40 +82,40 @@ class MLP():
     def Propagar(self):
         # Operaciones en la primer capa
         for a in range(self.n_ocultas):
-            self.un[a,:] = np.dot(self.w1[a,:], self.Entradas) + self.uoc[a,:]
+            self.hidden_layer_inputs[a,:] = np.dot(self.w1[a,:], self.current_inputs) + self.uoc[a,:]
         
         # Calcular la activacion de la neuronas en la capa oculta
         for o in range(self.n_ocultas):
-            self.gu[o,:] = tanh(self.un[o,:])
+            self.hidden_layer_outputs[o,:] = tanh(self.hidden_layer_inputs[o,:])
         
         # Calcular Y potencial de activacion de la neuronas de salida
-        self.Y = (np.dot(self.w2,self.gu) + self.us)
+        self.output_layer_input = (np.dot(self.w2,self.hidden_layer_outputs) + self.bias)
         # Calcular la salida de la neurona de salida
-        self.y = tanh(self.Y)
+        self.y = tanh(self.output_layer_input)
     
     def Backpropagation(self):
-        # Calcular el error
-        self.error_real = (self.di - self.y)
-        # Calcular ds
-        self.ds = (dtanh(self.Y) * self.error_real)
-        # Ajustar w2
-        self.w2 = self.w2 + (np.transpose(self.gu) * self.fac_ap * self.ds)
-        # Ajustar umbral us
-        self.us = self.us + (self.fac_ap * self.ds)
-        # Calcular docu
-        self.docu = dtanh(self.un) * np.transpose(self.w2) * self.ds
-        # Ajustar los pesos w1
+
+        self.error_real = (self.current_label - self.y)
+
+        self.output_delta = (dtanh(self.output_layer_input) * self.error_real)
+
+        self.w2 = self.w2 + (np.transpose(self.hidden_layer_outputs) * self.learning_rate * self.output_delta)
+
+        self.bias = self.bias + (self.learning_rate * self.output_delta)
+
+        self.hidden_output_delta = dtanh(self.hidden_layer_inputs) * np.transpose(self.w2) * self.output_delta
+
         for j in range(self.n_ocultas):
-            self.w1[j,:] = self.w1[j,:] + ((self.docu[j,:]) * self.Entradas * self.fac_ap)
+            self.w1[j,:] = self.w1[j,:] + ((self.hidden_output_delta[j,:]) * self.current_inputs * self.learning_rate)
         
         # Ajustar el umbral en las neuronas ocultas
         for g in range(self.n_ocultas):
-            self.uoc[g,:] = self.uoc[g,:] + (self.fac_ap * self.docu[g,:])
+            self.uoc[g,:] = self.uoc[g,:] + (self.learning_rate * self.hidden_output_delta[g,:])
         
     def Error(self):
         # Error cuadratico medio
-        self.Ew = ((1/len(self.d)) * (sum(self.Error_actual)))
-        self.error_red = (self.Ew - self.Error_prev)
+        self.Ew = ((1/len(self.labels)) * (sum(self.Error_actual)))
+        self.error_red = (self.Ew - self.prev_error)
 
 # Funcion para obtener la tanh
 def tanh(x):
