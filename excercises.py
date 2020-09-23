@@ -12,7 +12,7 @@ def excercise1():
   x = np.array(x)
   y = np.array(y)
 
-  print("=== OR FUNCTION ===")
+  print("=== AND FUNCTION ===")
   print("X=" + str(x))
   print("Y=" + str(y))
   print("Training...")
@@ -54,22 +54,25 @@ def excercise2():
               y.append(float(each))
   f.close()
 
-  x = np.array(x)
-  y = np.array(y)
+  train_x = np.array(x[:99])
+  train_y = np.array(y[:99])
+  validate_x = np.array(x[100:])
+  validate_y = np.array(y[100:])
 
   # print("=== OR FUNCTION ===")
-  print("X=" + str(x))
-  print("Y=" + str(y))
+  print("X=" + str(train_x))
+  print("Y=" + str(train_y))
   # x = normalize_arr(x)
-  y = normalize_arr(y)
-  print("Normalized X=" + str(x))
-  print("Normalized Y=" + str(y))
+  train_y = normalize_arr(train_y)
+  validate_y = normalize_arr(validate_y)
+  # print("Normalized X=" + str(train_x))
+  print("Normalized Y=" + str(train_y))
   print("Training...")
-  perceptron = NonLinearPerceptron(3)
-  perceptron.train(x, y)
-  # print(perceptron.cost_function(x, y))
-  # print_perceptron_test(perceptron, x, y)
+  perceptron = NonLinearPerceptron(3, threshold=200)
+  perceptron.train(train_x, train_y)
   print("Resulting weights: " + str(perceptron.weights))
+  print("Validation set cost function: " + str(perceptron.cost_function(validate_x, validate_y)))
+  # print_perceptron_test(perceptron, x, y)
 
 def Datos_entrenamiento(matriz,x1,xn):
     xin = matriz[:,x1:xn+1]
@@ -125,6 +128,6 @@ def normalize_arr(arr):
   max = np.max(arr)    
   return (arr - min) / (max - min) 
 
-excercise3()
+excercise2()
 
 # 4.47, -4.08, 4.45 -> 87
