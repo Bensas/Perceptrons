@@ -43,22 +43,22 @@ class MLP():
             respuesta[p,:] = self.y
         return respuesta.tolist()
     
-    def Aprendizaje(self):
+    def Aprendizaje(self, prueba):
         errores = [] # Almacenar los errores de la red en un ciclo
         while(np.abs(self.error_red) > self.precision):
             self.prev_error = self.Ew
+            a = 0
             for i in range(len(self.labels)):
                 self.current_inputs = self.all_inputs[:,i] # Senales de entrada por iteracion
                 self.current_label = self.labels[i]
                 self.Propagar()
                 self.Backpropagation()
                 self.Propagar()
-                print("esperado: ")
-                print(self.current_label)
-                print("resultado: ")
-                print(self.y)
-                print("\n")
+                if(prueba):
+                    print("esperado para el " + str(a) + ": " + str(self.current_label))
+                    print("resultado: " + str(self.y))
                 self.current_error[i] = (0.5)*((self.current_label - self.y)**2)
+                a = a + 1
             # error global de la red
             self.Error()
             errores.append(self.error_red)
@@ -85,24 +85,24 @@ class MLP():
         
         # Calcular la activacion de la neuronas en la capa oculta
         for o in range(self.n_ocultas):
-            self.hidden_layer_outputs[o,:] = tanh(self.hidden_layer_inputs[o,:])
+            self.hidden_layer_outputs[o,:] = sigmoide(self.hidden_layer_inputs[o,:])
         
         # Calcular Y potencial de activacion de la neuronas de salida
         self.output_layer_input = (np.dot(self.w2,self.hidden_layer_outputs) + self.bias)
         # Calcular la salida de la neurona de salida
-        self.y = tanh(self.output_layer_input)
+        self.y = sigmoide(self.output_layer_input)
     
     def Backpropagation(self):
 
         self.error_real = (self.current_label - self.y)
 
-        self.output_delta = (dtanh(self.output_layer_input) * self.error_real)
+        self.output_delta = (dsigmoide(self.output_layer_input) * self.error_real)
 
         self.w2 = self.w2 + (np.transpose(self.hidden_layer_outputs) * self.learning_rate * self.output_delta)
 
         self.bias = self.bias + (self.learning_rate * self.output_delta)
 
-        self.hidden_output_delta = dtanh(self.hidden_layer_inputs) * np.transpose(self.w2) * self.output_delta
+        self.hidden_output_delta = dsigmoide(self.hidden_layer_inputs) * np.transpose(self.w2) * self.output_delta
 
         for j in range(self.n_ocultas):
             self.w1[j,:] = self.w1[j,:] + ((self.hidden_output_delta[j,:]) * self.current_inputs * self.learning_rate)
