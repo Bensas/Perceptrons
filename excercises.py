@@ -54,25 +54,55 @@ def excercise2():
               y.append(float(each))
   f.close()
 
-  train_x = np.array(x[:99])
-  train_y = np.array(y[:99])
-  validate_x = np.array(x[100:])
-  validate_y = np.array(y[100:])
+  find_optimal_training_group(x, y)
 
-  # print("=== OR FUNCTION ===")
-  print("X=" + str(train_x))
-  print("Y=" + str(train_y))
-  # x = normalize_arr(x)
-  train_y = normalize_arr(train_y)
-  validate_y = normalize_arr(validate_y)
-  # print("Normalized X=" + str(train_x))
-  print("Normalized Y=" + str(train_y))
-  print("Training...")
-  perceptron = NonLinearPerceptron(3, threshold=200)
-  perceptron.train(train_x, train_y)
-  print("Resulting weights: " + str(perceptron.weights))
-  print("Validation set cost function: " + str(perceptron.cost_function(validate_x, validate_y)))
+  # train_x = np.array(x[:99])
+  # train_y = np.array(y[:99])
+  # validate_x = np.array(x[100:])
+  # validate_y = np.array(y[100:])
+
+  # print("Training set X=" + str(train_x))
+  # print("Training set Y=" + str(train_y))
+  # train_y = normalize_arr(train_y)
+  # validate_y = normalize_arr(validate_y)
+  # print("Normalized Y=" + str(train_y))
+  # print("Training...")
+  # perceptron = NonLinearPerceptron(no_of_inputs=3, threshold=200)
+  # perceptron.train(train_x, train_y)
+  # print("Resulting weights: " + str(perceptron.weights))
+  # print("Validation set cost function: " + str(perceptron.cost_function(validate_x, validate_y)))
   # print_perceptron_test(perceptron, x, y)
+
+def find_optimal_training_group(x, y):
+  current_min_error = 1000
+  min_i, min_j = 0, 0
+  for i in range(len(y)):
+    for j in range(i, len(y)):
+      train_x = np.array(x[i:j+1])
+      train_y = np.array(y[i:j+1])
+
+      validate_x = x[:i]
+      validate_x.extend(x[j+1:])
+      validate_x = np.array(validate_x)
+
+      validate_y = y[:i]
+      validate_y.extend(y[j+1:])
+      validate_y = np.array(validate_y)
+
+      train_y = normalize_arr(train_y)
+      validate_y = normalize_arr(validate_y)
+      perceptron = NonLinearPerceptron(no_of_inputs=3, threshold=200)
+      perceptron.train(train_x, train_y)
+      error = perceptron.cost_function(validate_x, validate_y)
+      # print(error + " " + str(i) + " - " + str(j))
+      print(error)
+      print(i)
+      print(j)
+      if error < current_min_error:
+        current_min_error = error
+        min_i, min_j = i, j
+  print("Minimum error was " + str(current_min_error) + " for training set indexes " + str(min_i) + ", " + str(min_j))
+
 
 def Datos_entrenamiento(matriz,x1,xn):
     xin = matriz[:,x1:xn+1]
@@ -172,6 +202,8 @@ def print_perceptron_test(perceptron, inputs, expected_outputs):
     print(perceptron.predict(curr_input) == curr_expected_output)
 
 def normalize_arr(arr):
+  if len(arr) == 0:
+    return arr
   min = np.min(arr)
   max = np.max(arr)    
   return (arr - min) / (max - min) 
@@ -179,3 +211,20 @@ def normalize_arr(arr):
 excercise2()
 
 # 4.47, -4.08, 4.45 -> 87
+
+# Funcion para obtener la tanh
+def tanh(x):
+    return np.tanh(x)
+
+# Funcion para obtener la derivada de tanh x
+def dtanh(x):
+    return 1.0 - np.tanh(x)**2
+
+# Funcion sigmoide de x
+def sigmoide(x):
+    return 1/(1+np.exp(-x))
+
+# Funcion para obtener la derivada de de la funcion sigmoide
+def dsigmoide(x):
+    s = 1/(1+np.exp(-x))
+    return s * (1-s)

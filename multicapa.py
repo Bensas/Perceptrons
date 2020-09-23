@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class MLP():
     # constructor
-    def __init__(self,all_inputs,labels,w_1,w_2,bias,hidden_input_bias,precision,epocas,learning_rate,n_ocultas,n_entradas,n_salida):
+    def __init__(self,all_inputs,labels,w_1,w_2,bias,hidden_input_bias,precision,epocas,learning_rate,n_ocultas,n_entradas,n_salida, activation, dactivation):
         # Variables de inicialización 
         self.all_inputs = np.transpose(all_inputs)
         self.labels = labels
@@ -34,6 +34,8 @@ class MLP():
         self.error_real = 0
         self.output_delta = 0.0 # delta de salida
         self.hidden_output_delta = np.zeros((n_ocultas,1)) # Deltas en neuronas ocultas
+        self.activation = activation
+        self.dactivation = dactivation
         
     def Operacion(self):
         respuesta = np.zeros((len(self.labels),1))
@@ -85,24 +87,24 @@ class MLP():
         
         # Calcular la activacion de la neuronas en la capa oculta
         for o in range(self.n_ocultas):
-            self.hidden_layer_outputs[o,:] = tanh(self.hidden_layer_inputs[o,:])
+            self.hidden_layer_outputs[o,:] = self.activation(self.hidden_layer_inputs[o,:])
         
         # Calcular Y potencial de activacion de la neuronas de salida
         self.output_layer_input = (np.dot(self.w2,self.hidden_layer_outputs) + self.bias)
         # Calcular la salida de la neurona de salida
-        self.y = tanh(self.output_layer_input)
+        self.y = self.activation(self.output_layer_input)
     
     def Backpropagation(self):
 
         self.error_real = (self.current_label - self.y)
 
-        self.output_delta = (dtanh(self.output_layer_input) * self.error_real)
+        self.output_delta = (self.dactivation(self.output_layer_input) * self.error_real)
 
         self.w2 = self.w2 + (np.transpose(self.hidden_layer_outputs) * self.learning_rate * self.output_delta)
 
         self.bias = self.bias + (self.learning_rate * self.output_delta)
 
-        self.hidden_output_delta = dtanh(self.hidden_layer_inputs) * np.transpose(self.w2) * self.output_delta
+        self.hidden_output_delta = self.dactivation(self.hidden_layer_inputs) * np.transpose(self.w2) * self.output_delta
 
         for j in range(self.n_ocultas):
             self.w1[j,:] = self.w1[j,:] + ((self.hidden_output_delta[j,:]) * self.current_inputs * self.learning_rate)
@@ -114,20 +116,3 @@ class MLP():
         # Error cuadratico medio
         self.Ew = ((1/len(self.labels)) * (sum(self.current_error)))
         self.error_red = (self.Ew - self.prev_error)
-
-# Funcion para obtener la tanh
-def tanh(x):
-    return np.tanh(x)
-
-# Funcion para obtener la derivada de tanh x
-def dtanh(x):
-    return 1.0 - np.tanh(x)**2
-
-# Funcion sigmoide de x
-def sigmoide(x):
-    return 1/(1+np.exp(-x))
-
-# Funcion para obtener la derivada de de la funcion sigmoide
-def dsigmoide(x):
-    s = 1/(1+np.exp(-x))
-    return s * (1-s)
