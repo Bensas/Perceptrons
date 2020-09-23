@@ -57,7 +57,21 @@ class MLP():
                 self.Backpropagation()
                 self.Propagar()
                 if(prueba):
-                    print("esperado para el " + str(a) + ": " + str(self.current_label))
+                    # Ej3.1
+                    
+                    if(a == 0):
+                        print("esperado para el [-1;1]: " + str(self.current_label))
+                    elif(a == 1):
+                        print("esperado para el [1;-1]: " + str(self.current_label))
+                    elif(a == 2):
+                        print("esperado para el [-1;-1]: " + str(self.current_label))
+                    else:
+                        print("esperado para el [1;1]: " + str(self.current_label))
+
+                    # Ej3.2
+
+                    # print("esperado para el " + str(a) + ": " + str(self.current_label))
+                    
                     print("resultado: " + str(self.y))
                 self.current_error[i] = (0.5)*((self.current_label - self.y)**2)
                 a = a + 1
