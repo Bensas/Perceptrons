@@ -13,7 +13,7 @@ def sigmoid_derivate(activation, beta=0.5):
 	return 2 * beta * sigmoid(activation, beta=beta) * (1 - sigmoid(activation, beta=beta))
 
 class NonLinearPerceptron(object):
-    def __init__(self, no_of_inputs, threshold=1000, learning_rate=0.001, activation_function=sigmoid, activation_function_derivative=sigmoid_derivate):
+    def __init__(self, no_of_inputs, threshold=1000, learning_rate=0.01, activation_function=sigmoid, activation_function_derivative=sigmoid_derivate):
         self.threshold = threshold
         self.learning_rate = learning_rate
         self.weights = np.ones(no_of_inputs)
