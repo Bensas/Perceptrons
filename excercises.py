@@ -112,26 +112,26 @@ def excercise3():
 
   # Ejercicio 3.1
 
-  x = [[-1, 1, 1], [1, -1, 1], [-1, -1, -1], [1, 1, -1]]
+  # x = [[-1, 1, 1], [1, -1, 1], [-1, -1, -1], [1, 1, -1]]
 
   # Ejercicio 3.2
 
-  # x = []
-  # i = 0
-  # x_row = []
-  # # utilizamos una version acortada de los pixels para obtener los pesos ideales (con un error muy chico).
-  # f = open('ej3_mapa_pixels_acortado.txt', 'r')
-  # reader = csv.reader(f, delimiter=' ', lineterminator='\n')
-  # for row in reader:
-  #     for each in row:
-  #         if (each != ''):
-  #             i = i + 1
-  #             x_row.append(int(each))
-  #         if(i == 36):
-  #             i = 0
-  #             x.append(x_row)
-  #             x_row = []
-  # f.close()
+  x = []
+  i = 0
+  x_row = []
+  # utilizamos una version acortada de los pixels para obtener los pesos ideales (con un error muy chico).
+  f = open('ej3_mapa_pixels_acortado.txt', 'r')
+  reader = csv.reader(f, delimiter=' ', lineterminator='\n')
+  for row in reader:
+      for each in row:
+          if (each != ''):
+              i = i + 1
+              x_row.append(int(each))
+          if(i == 36):
+              i = 0
+              x.append(x_row)
+              x_row = []
+  f.close()
 
   matrix_data = np.array(x)
   # Datos de entrada
@@ -164,7 +164,7 @@ def excercise3():
   print(w_2)
   print("despues ... \n")
   red = MLP(xi,d,w_1,w_2,us,uoc,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
-  epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje()
+  epochs,w1_a,w2_a,us_a,uoc_a,E = red.Aprendizaje(False)
   print(w1_a)
   print(w2_a)
   print("error final: ")
@@ -172,29 +172,29 @@ def excercise3():
 
   # Esta parte es para el ejercicio 3.2, aca prueba testear si el algoritmo te devuelve si el numero es par o impar del 0 al 9
   
-  # print("\nprobando los nuevos pixeles: \n")
+  print("\nprobando los nuevos pixeles: \n")
 
-  # x = []
-  # i = 0
-  # x_row = []
-  # f = open('ej3_mapa_pixels.txt', 'r')
-  # reader = csv.reader(f, delimiter=' ', lineterminator='\n')
-  # for row in reader:
-  #     for each in row:
-  #         if (each != ''):
-  #             i = i + 1
-  #             x_row.append(int(each))
-  #         if(i == 36):
-  #             i = 0
-  #             x.append(x_row)
-  #             x_row = []
-  # f.close()
-  # matrix_data = np.array(x)
-  # d = matrix_data[:,x_n+1]
-  # xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
-  # epocas = 0
-  # red2 = MLP(xi,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
-  # red2.Aprendizaje()
+  x = []
+  i = 0
+  x_row = []
+  f = open('ej3_mapa_pixels.txt', 'r')
+  reader = csv.reader(f, delimiter=' ', lineterminator='\n')
+  for row in reader:
+      for each in row:
+          if (each != ''):
+              i = i + 1
+              x_row.append(int(each))
+          if(i == 36):
+              i = 0
+              x.append(x_row)
+              x_row = []
+  f.close()
+  matrix_data = np.array(x)
+  d = matrix_data[:,x_n+1]
+  xi = (Datos_entrenamiento(matrix_data,x_inicio,x_n))
+  epocas = 0
+  red2 = MLP(xi,d,w1_a,w2_a,us_a,uoc_a,precision,epocas,fac_ap,n_ocultas,n_entradas,n_salida)
+  red2.Aprendizaje(True)
 
 def print_perceptron_test(perceptron, inputs, expected_outputs):
   print("Perceptron tests (all should be true):")
@@ -208,7 +208,7 @@ def normalize_arr(arr):
   max = np.max(arr)    
   return (arr - min) / (max - min) 
 
-excercise2()
+excercise3()
 
 # 4.47, -4.08, 4.45 -> 87
 

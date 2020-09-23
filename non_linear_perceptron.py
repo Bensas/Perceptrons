@@ -34,11 +34,13 @@ class NonLinearPerceptron(object):
                 prediction = self.predict(inputs)
                 derivative = self.predict_derivative(inputs)
                 self.weights += self.learning_rate * (label - prediction) * derivative * inputs
-                print(self.cost_function(training_inputs, labels))
+                # print(self.cost_function(training_inputs, labels))
 
     def cost_function(self, inputs, labels):
+      if len(labels) == 0:
+        return 1000
       error = 0.0
       for inputs, label in zip(inputs, labels):
         prediction = self.predict(inputs)
         error += (prediction - label) ** 2
-      return error
+      return error / len(labels)

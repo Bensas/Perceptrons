@@ -45,22 +45,22 @@ class MLP():
             respuesta[p,:] = self.y
         return respuesta.tolist()
     
-    def Aprendizaje(self):
+    def Aprendizaje(self, prueba):
         errores = [] # Almacenar los errores de la red en un ciclo
         while(np.abs(self.error_red) > self.precision):
             self.prev_error = self.Ew
+            a = 0
             for i in range(len(self.labels)):
                 self.current_inputs = self.all_inputs[:,i] # Senales de entrada por iteracion
                 self.current_label = self.labels[i]
                 self.Propagar()
                 self.Backpropagation()
                 self.Propagar()
-                print("esperado: ")
-                print(self.current_label)
-                print("resultado: ")
-                print(self.y)
-                print("\n")
+                if(prueba):
+                    print("esperado para el " + str(a) + ": " + str(self.current_label))
+                    print("resultado: " + str(self.y))
                 self.current_error[i] = (0.5)*((self.current_label - self.y)**2)
+                a = a + 1
             # error global de la red
             self.Error()
             errores.append(self.error_red)
