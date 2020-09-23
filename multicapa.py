@@ -54,6 +54,11 @@ class MLP():
                 self.Propagar()
                 self.Backpropagation()
                 self.Propagar()
+                print("esperado: ")
+                print(self.di)
+                print("resultado: ")
+                print(self.y)
+                print("\n")
                 self.Error_actual[i] = (0.5)*((self.di - self.y)**2)
             # error global de la red
             self.Error()
@@ -64,6 +69,14 @@ class MLP():
                 break
         # Regresar 
         return self.epochs,self.w1,self.w2,self.us,self.uoc,Errores
+    
+    # def Test(self):    
+    #     self.Entradas = self.xi[:,34] # Senales de entrada por iteracion
+    #     self.Propagar()
+    #     self.Backpropagation()
+    #     self.Propagar()
+    #     print("resultado: ")
+    #     print(self.y)
                 
     
     def Propagar(self):
