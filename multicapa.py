@@ -69,16 +69,7 @@ class MLP():
             if self.current_epochs > self.epocas:
                 break
         # Regresar 
-        return self.current_epochs,self.w1,self.w2,self.bias,self.hidden_input_bias,errores
-    
-    # def Test(self):    
-    #     self.current_inputs = self.all_inputs[:,34] # Senales de entrada por iteracion
-    #     self.Propagar()
-    #     self.Backpropagation()
-    #     self.Propagar()
-    #     print("resultado: ")
-    #     print(self.y)
-                
+        return self.current_epochs,self.w1,self.w2,self.bias,self.hidden_input_bias,errores                
     
     def Propagar(self):
         # Operaciones en la primer capa

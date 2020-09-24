@@ -4,6 +4,7 @@ from numpy import random
 from simple_perceptron import SimplePerceptron
 from non_linear_perceptron import NonLinearPerceptron
 from multicapa import MLP
+from activation_functions import tanh, dtanh, sigmoide, dsigmoide
 
 def excercise1():
   x = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
@@ -54,24 +55,28 @@ def excercise2():
               y.append(float(each))
   f.close()
 
-  find_optimal_training_group(x, y)
+  # find_optimal_training_group(x, y)
 
-  # train_x = np.array(x[:99])
-  # train_y = np.array(y[:99])
-  # validate_x = np.array(x[100:])
-  # validate_y = np.array(y[100:])
+  train_x = np.array(x[16:200])
+  train_y = np.array(y[16:200])
 
-  # print("Training set X=" + str(train_x))
-  # print("Training set Y=" + str(train_y))
-  # train_y = normalize_arr(train_y)
-  # validate_y = normalize_arr(validate_y)
-  # print("Normalized Y=" + str(train_y))
-  # print("Training...")
-  # perceptron = NonLinearPerceptron(no_of_inputs=3, threshold=200)
-  # perceptron.train(train_x, train_y)
-  # print("Resulting weights: " + str(perceptron.weights))
-  # print("Validation set cost function: " + str(perceptron.cost_function(validate_x, validate_y)))
-  # print_perceptron_test(perceptron, x, y)
+  validate_x = np.array(x[:16])
+  validate_y = np.array(y[:16])
+
+  train_y = normalize_arr(train_y)
+  validate_y = normalize_arr(validate_y)
+
+  print("Training set X=" + str(train_x))
+  print("Training set Y=" + str(train_y))
+  train_y = normalize_arr(train_y)
+  validate_y = normalize_arr(validate_y)
+  print("Normalized Y=" + str(train_y))
+  print("Training...")
+  perceptron = NonLinearPerceptron(no_of_inputs=3, threshold=200)
+  perceptron.train(train_x, train_y)
+  print("Resulting weights: " + str(perceptron.weights))
+  print("Validation set cost function: " + str(perceptron.cost_function(validate_x, validate_y)))
+
 
 def find_optimal_training_group(x, y):
   current_min_error = 1000
@@ -107,23 +112,6 @@ def find_optimal_training_group(x, y):
 def Datos_entrenamiento(matriz,x1,xn):
     xin = matriz[:,x1:xn+1]
     return xin
-
-# Funcion para obtener la tanh
-def tanh(x):
-    return np.tanh(x)
-
-# Funcion para obtener la derivada de tanh x
-def dtanh(x):
-    return 1.0 - np.tanh(x)**2
-
-# Funcion sigmoide de x
-def sigmoide(x):
-    return 1/(1+np.exp(-x))
-
-# Funcion para obtener la derivada de de la funcion sigmoide
-def dsigmoide(x):
-    s = 1/(1+np.exp(-x))
-    return s * (1-s)
 
 def excercise3():
 
@@ -227,6 +215,8 @@ def normalize_arr(arr):
   max = np.max(arr)    
   return (arr - min) / (max - min) 
 
+# excercise1()
+# excercise2()
 excercise3()
 
 # 4.47, -4.08, 4.45 -> 87
