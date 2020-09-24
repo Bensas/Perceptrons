@@ -114,7 +114,6 @@ def Datos_entrenamiento(matriz,x1,xn):
     return xin
 
 def excercise3():
-
   # Ejercicio 3.1
   excercise31()
   # Ejercicio 3.2
@@ -265,5 +264,3 @@ def normalize_arr(arr):
 # excercise1()
 # excercise2()
 excercise3()
-
-# 4.47, -4.08, 4.45 -> 87
