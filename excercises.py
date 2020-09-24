@@ -163,8 +163,8 @@ def excercise31():
   print("error final: ")
   print(red.error_red)
 
+# Ejercicio 3.2
 def excercise32():
-  # Ejercicio 3.2
 
   x = []
   i = 0
